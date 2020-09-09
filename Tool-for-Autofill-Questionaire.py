@@ -20,22 +20,25 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+
 def random_major():
-    major_list = ["数学", "物理学", "化学", "中文学", "政治学", "经济学", "历史学", "生物学", "生物学", "考古学", "地理学", 
-    "计算机科学与技术", "自动化"]
+    major_list = ["数学", "物理学", "化学", "中文学", "政治学", "经济学", "历史学", "生物学", "生物学", "考古学", "地理学",
+                  "计算机科学与技术", "自动化"]
     n = random.randint(0, len(major_list) - 1)
     r_major = major_list[n]
     return r_major
 
+
 def random_phone_num():
-    all_phone_nums=set()
+    all_phone_nums = set()
     num_start = ['134', '135', '136', '137', '138', '139', '150', '151', '152', '158', '159', '157', '182', '187', '188',
-    '147', '130', '131', '132', '155', '156', '185', '186', '133', '153', '180', '189']
+                 '147', '130', '131', '132', '155', '156', '185', '186', '133', '153', '180', '189']
 
     start = random.choice(num_start)
-    end = ''.join(random.sample(string.digits,8))
+    end = ''.join(random.sample(string.digits, 8))
     res = start+end
     return res
+
 
 def GBK2312():
     head = random.randint(0xb0, 0xf7)
@@ -43,6 +46,7 @@ def GBK2312():
     val = f'{head:x}{body:x}'
     st = bytes.fromhex(val).decode('gb2312')
     return st
+
 
 def first_name():
     first_name_list = [
@@ -57,18 +61,22 @@ def first_name():
     f_name = first_name_list[n]
     return f_name
 
+
 def second_name():
     second_name_list = [GBK2312(), '']
     n = random.randint(0, 1)
     s_name = second_name_list[n]
     return s_name
 
+
 def last_name():
     return GBK2312()
+
 
 def create_name():
     name = first_name() + second_name() + last_name()
     return name
+
 
 driver = webdriver.Chrome()
 while True:
@@ -80,12 +88,13 @@ while True:
             if not NetworkErr:
                 print("Network error, please check your network!")
                 NetworkErr = True
-            driver.get("http://contest.zhishijingsai.com.cn/jq/90306762.aspx?udsid=892160")
+            driver.get(
+                "http://contest.zhishijingsai.com.cn/jq/90306762.aspx?udsid=892160")
             time.sleep(3)
         else:
             NetworkErr = False
             break
-    
+
     time.sleep(3)
 
     js = '''document.evaluate("//*[@id='q1']", document).iterateNext().value = "甘肃-兰州市-榆中县"'''
@@ -118,13 +127,14 @@ while True:
 
     mail = wait.until(EC.presence_of_element_located(
         (By.XPATH, "//*[@id='q7']")))
-    mail.send_keys(''.join(random.sample(string.digits,8))+"@qq.com")
+    mail.send_keys(''.join(random.sample(string.digits, 8))+"@qq.com")
 
     time.sleep(3)
 
     rand_year = random.randint(1, 4)
 
-    js = '''document.evaluate("//*[@id='q4_'''+ str(rand_year) +'''']", document).iterateNext().click()'''
+    js = '''document.evaluate("//*[@id='q4_''' + str(rand_year) + \
+        '''']", document).iterateNext().click()'''
     driver.execute_script(js)
 
     time.sleep(3)
@@ -135,20 +145,21 @@ while True:
 
     time.sleep(3)
 
-    for qnum in range(8,28):
+    for qnum in range(8, 28):
         choice = random.randint(1, 4)
-        js = '''document.evaluate("//*[@id='q'''+ str(qnum) +'''_'''+ str(choice) +'''']", document).iterateNext().click()'''
+        js = '''document.evaluate("//*[@id='q''' + str(qnum) + '''_''' + str(
+            choice) + '''']", document).iterateNext().click()'''
         driver.execute_script(js)
 
         time.sleep(3)
-    
+
     try:
         submit = wait.until(EC.presence_of_element_located(
             (By.XPATH, "//*[@id='submit_button']")))
         submit.click()
     except Exception:
         next_page = wait.until(EC.presence_of_element_located(
-        (By.XPATH, "//*[@id='btnNext']")))
+            (By.XPATH, "//*[@id='btnNext']")))
         next_page.click()
 
         time.sleep(3)
